@@ -8,27 +8,29 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {
 var player;
 var platforms;
 var cursors;
-var stars;
+var greens;
+var pink;
 var score = 0;
 var scoreText;
 
 function preload() {
 
-    game.load.image('sky', 'assets/sky.png');
+    game.load.image('sun', 'assets/sun.png');
     game.load.image('ground', 'assets/platform.png');
-    game.load.image('star', 'assets/star.png');
-    game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    game.load.image('green', 'assets/green.png');
+    game.load.spritesheet('panda', 'assets/panda.png', 64, 64);
+    game.load.image('pink', 'assets/pink.png');
 
 }
 
 function create() {
 
-    game.add.sprite(0, 0, 'star');
+    // game.add.sprite(0, 0, 'green');
 
     //  A simple background for our game
-    game.add.sprite(0, 0, 'sky');
+    game.add.sprite(0, 0, 'sun');
 
-    game.add.sprite(300, 350, 'star');
+    // game.add.sprite(300, 350, 'green');
 
     platforms = game.add.group();
 
@@ -83,13 +85,13 @@ ledge.body.immovable = true;
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     // the player and it's stettings 
-    player = game.add.sprite(32, game.world.height - 150, 'dude');
+    player = game.add.sprite(32, game.world.height - 150, 'panda');
 
     // We need to enable physics on the player
     game.physics.arcade.enable(player);
 
     // Player physics properties. Give the little guy a slight bounce.
-    player.body.bounce.y = 0.5;
+    //player.body.bounce.y = 0.5;
     player.body.gravity.y = 300;
     player.body.collideWorldBounds = true;
 
@@ -99,19 +101,19 @@ ledge.body.immovable = true;
 
     cursors = game.input.keyboard.createCursorKeys();
 
-    stars = game.add.group();
-    stars.enableBody = true;
+    greens = game.add.group();
+    greens.enableBody = true;
 
     // Here we'll create 12 of them evenly spaced apart
     for (var i = 0; i < 60; i++) {
         // Create a star inside the 'stars' group
-        var star = stars.create(i * 70, 0, 'star');
+        var green = greens.create(i * 70, 0, 'green');
 
         // Let gravity do it's thing
-        star.body.gravity.y = 90;
+        green.body.gravity.y = 90;
 
         // This just gives each star a slighty random bounce value
-        star.body.bounce.y = 0.7 + Math.random() * 0.2
+        green.body.bounce.y = 0.7 + Math.random() * 0.2
     }
     // This is where you can see your score
     scoreText = game.add.text(16, 16, 'score 0', { fontSize: '32px', fill: '#000' });
@@ -145,18 +147,29 @@ function update() {
         player.body.velocity.y = -300;
     }
 
-    game.physics.arcade.collide(stars, platforms);
+    game.physics.arcade.collide(greens, platforms);
 
 
-    game.physics.arcade.overlap(player, stars, collectStar, null, this)
+    game.physics.arcade.overlap(player, greens, collectgreen, null, this)
 
 scoreText.text = "Score: " + score;
 
 }
 
-function collectStar(player, star) {
+function collectgreen(player, green) {
 
+    green.kill();
+// Here we'll create 12 of them evenly spaced apart
+        // Create a star inside the 'stars' group
+        var green = greens.create(Math.random() * 600, 0, 'green');
+
+        // Let gravity do it's thing
+        green.body.gravity.y = 90;
+
+        // This just gives each star a slighty random bounce value
+        green.body.bounce.y = 0.7 + Math.random() * 0.2
+    
     // removes the star from the screen
     score++;
-    star.kill();
+    
 }
